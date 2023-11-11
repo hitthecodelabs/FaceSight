@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Makeup Recommendations</title>
+    <style>
+         /* Estilos para la presentación de la página de inicio y carga */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        h2 {
+            color: #555;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Espaciado entre los elementos */
+        }
+
+        input[type="file"] {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        video {
+            width: 300px;
+            height: 225px;
+            border: 1px solid #ccc;
+            display: none; /* Hide video by default */
+            margin-bottom: 10px;
+        }
+
+        canvas {
+            display: none; /* Hide it by default */
+        } 
+
+        .blue-button {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .blue-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Sube una foto desde tu dispositivo</h2>
+
+    <!-- Sección 1: Seleccionar y cargar una foto -->
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="fileInput"> <!-- Campo de entrada de archivo -->
+        <input type="submit" value="Cargar"> <!-- Botón de carga -->
+    </form>
+
+    <!-- Sección 2: Activar la cámara y tomar una foto -->
+    <h3>O usa tu cámara</h3> 
+    <button id="startCamera" class="blue-button">Inicializar Cámara</button> <!-- Botón para iniciar la cámara -->
+    <video id="webcam" autoplay playsinline></video> <!-- Elemento de video para mostrar la vista de la cámara -->
+    <button id="capture" type="button" class="blue-button" style="display:none;">Tómate una foto</button> <!-- Botón para capturar una foto desde la cámara -->
+
+    <canvas id="canvas"></canvas> <!-- Elemento de lienzo para dibujar la imagen capturada de la cámara -->
+    <form action="/" method="post" enctype="multipart/form-data" id="capturedForm"> <!-- Formulario para enviar la imagen capturada -->
+    </form>
+    
+    <script>
+        // Obtener referencias a los elementos del DOM
+        const startCameraBtn = document.getElementById('startCamera');
+        const webcam = document.getElementById('webcam');
+        const captureBtn = document.getElementById('capture');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const capturedForm = document.getElementById('capturedForm');
+
+        // Iniciar la cámara al hacer clic en el botón
+        startCameraBtn.addEventListener('click', () => {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    webcam.srcObject = stream;
+                    webcam.style.display = 'block'; // Mostrar el video
+                    captureBtn.style.display = 'block'; // Mostrar el botón de captura
+                })
+                .catch(err => {
+                    console.error("Error al acceder a la cámara:", err);
+                });
+        });
+
+        // Capturar una foto
+        captureBtn.addEventListener('click', () => {
+            canvas.width = webcam.videoWidth;
+            canvas.height = webcam.videoHeight;
+            ctx.drawImage(webcam, 0, 0);
+
+            // Convertir el lienzo en Blob
+            canvas.toBlob(blob => {
+                const file = new File([blob], 'foto-webcam.jpg', {
+                    type: 'image/jpeg',
+                    lastModified: Date.now()
+                });
+
+                // Detener todas las pistas (apagar la cámara)
+                let stream = webcam.srcObject;
+                let tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+                webcam.srcObject = null;
+
+                // Crear un objeto FormData y adjuntar el archivo
+                const formData = new FormData(capturedForm);
+                formData.append("file", file);
+
+                // Subir utilizando la Fetch API
+                fetch('/process_image', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.text())
+                  .then(data => {
+                    document.body.innerHTML = data; // Reemplazar el contenido de la página actual con el HTML devuelto (results.html)
+                  }).catch(error => {
+                    console.error('Error al cargar la imagen capturada:', error);
+                });
+            }, 'image/jpeg');
+        });
+    </script>
+
+</body>
+
+</html>

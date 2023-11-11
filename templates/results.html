@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados</title>
+    <style>
+        /* Estilos para la presentación de la página de resultados */
+        
+        /* Configuración básica del cuerpo del documento */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #f2f2f2, #e6e6e6);
+            display: flex;
+            justify-content: flex-start; /* Alinea el contenido en la parte superior */
+            align-items: center;
+            min-height: 100vh; /* Permite que el cuerpo crezca si el contenido excede la altura de la ventana gráfica */
+            flex-direction: column;
+            padding: 20px 0; /* Agrega espacio en la parte superior e inferior para espaciamiento */
+        }
+        
+        /* Estilos para los encabezados de nivel 2 */
+        h2 {
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* Estilos para los párrafos */
+        p {
+            color: #555;
+            margin: 5px 0;
+            font-weight: 500;
+        }
+
+        /* Estilos para los encabezados de nivel 3 */
+        h3 {
+            margin-top: 25px;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Estilos para los elementos de lista */
+        li {
+            margin: 8px 0;
+            list-style-type: none;
+            color: #777;
+        }
+
+        /* Estilos para los enlaces */
+        a {
+            margin-top: 15px;
+            color: #007BFF;
+            text-decoration: none;
+            border: 1px solid #007BFF;
+            padding: 6px 12px;
+            border-radius: 20px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            text-align: center;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        /* Estilos para los enlaces cuando se pasa el cursor sobre ellos */
+        a:hover {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        /* Estilos para la sección de resultados */
+        div.results {
+            background-color: #fff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1);
+            width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Espacio entre elementos dentro de la sección de resultados */
+        }
+
+        /* Estilos para los iframes (marcos en línea) */
+        iframe {
+            width: 380px;  /* Ancho reducido */
+            height: 215px; 
+        }
+        
+        .styled-image {
+            width: 100%; /* Ensuring it fits within the results div */
+            max-width: 380px; /* Matches the width of your iframes for consistency */
+            height: auto; /* Keeping aspect ratio */
+            margin: 15px 0; /* Some spacing above and below the image */
+            border-radius: 8px; /* Optional: rounded corners to match the design */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: shadow for depth */
+        }
+    </style>
+</head>
+
+<body>
+    
+    <h2>Tus resultados</h2>
+    <div class="results">
+        <!-- Sección de Resultados de la imagen -->
+        <img src="{{ filepath }}" alt="Uploaded image" class="styled-image">
+        <p>Rango de Edad: <span style="color: #007BFF;">{{ edad }}</span></p>
+        <p>Tono de Piel: <span style="color: #007BFF;">{{ tono }}</span></p>
+        <p>Forma del Rostro: <span style="color: #007BFF;">{{ forma }}</span></p>
+        <h3 style="text-align: center; text-transform: none; text-justify: inter-word;">¡Resalta tu belleza! Tenemos para ti las siguientes recomendaciones:</h3>
+        
+        <!-- Video según rango de edad -->
+        <h4>Según rango de edad:</h4>
+        <iframe width="280" height="157" src="{{link}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        
+        <!-- Video según forma de rostro -->
+        <h4>Según forma de rostro:</h4>
+        <iframe width="280" height="157" src="https://www.youtube.com/embed/3Sy08R7YpQ8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        
+        <!-- Video según tono de piel -->
+        <h4>Según tono de piel:</h4>
+        <iframe width="280" height="157" src="https://www.youtube.com/embed/1t0rlJChZeQ?t=469" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        
+        
+        <li>{{ recomendacion_edad }}</li>
+        <li>{{ recomendacion_tono }}</li>
+        <li>{{ recomendacion_cara }}</li>
+        <a href="/">Home</a>
+    </div>
+    
+</body>
+
+</html>
