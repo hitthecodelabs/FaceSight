@@ -10,7 +10,6 @@ This Flask application is designed for facial analysis and recommendation genera
 - Flask
 - TensorFlow
 - PIL (Python Imaging Library)
-- Etc (you can inspect the file contect)
 
 ### Setup
 1. Clone the repository:
